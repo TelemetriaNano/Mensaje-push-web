@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Notificaciones Push</title>
+</head>
+<body>
+  <h1>Activar Notificaciones</h1>
+  <button id="activar">Activar Push</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
+
+    // 🔐 PEGA AQUÍ TU CONFIGURACIÓN REAL
+    const firebaseConfig = {
+       apiKey: "AIzaSyCCdJ9YirX__bPZEMTP2LwhSKZl2QNCTbU",
+  authDomain: "telemetria-nano-dede4.firebaseapp.com",
+  projectId: "telemetria-nano-dede4",
+  storageBucket: "telemetria-nano-dede4.firebasestorage.app",
+  messagingSenderId: "906041908876",
+  appId: "1:906041908876:web:3cc110596a45ff09e4a5a9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+
+    document.getElementById("activar").addEventListener("click", async () => {
+      try {
+        const permiso = await Notification.requestPermission();
+        if (permiso === "granted") {
+
+          const token = await getToken(messaging, {
+            vapidKey: "TU_CLAVE_VAPID_PUBLICA"
+          });
+
+          console.log("BErEPxenFDNg06KldgleXvc5IVotF5WsmZ23GPatkCDa0WvSHVLxkijM7Jd6fc6j9d49L4wbrHOEavsFlq6lRAw:", token);
+          alert("Notificaciones activadas. Revisa la consola.");
+
+        } else {
+          alert("Permiso denegado");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    onMessage(messaging, (payload) => {
+      console.log("Mensaje recibido:", payload);
+      alert(payload.notification.title);
+    });
+  </script>
+</body>
+</html>
